@@ -21,20 +21,47 @@ export const setupServer = () => {
   );
 
   app.get('/contacts', async (req, res) => {
-    const contacts = await getAllContacts();
+    try {
+      const contacts = await getAllContacts();
 
-    res.status(200).json({
-      data: contacts,
-    });
+      res.status(200).json({
+        status: 'success',
+        message: 'Successfully found contacts!',
+        data: contacts,
+      });
+    } catch (error) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Failed to fetch contacts',
+        error: error.message,
+      });
+    }
   });
 
   app.get('/contacts/:contactId', async (req, res) => {
-    const { contactId } = req.params;
-    const contact = await getContactById(contactId);
+    try {
+      const { contactId } = req.params;
+      const contact = await getContactById(contactId);
 
-    res.status(200).json({
-      data: contact,
-    });
+      if (contact) {
+        res.status(200).json({
+          status: 'success',
+          message: `Successfully found contact with id ${contactId}!`,
+          data: contact,
+        });
+      } else {
+        res.status(404).json({
+          status: 'error',
+          message: `Contact with id ${contactId} not found`,
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        status: 'error',
+        message: 'Failed to fetch contact',
+        error: error.message,
+      });
+    }
   });
 
   app.get('/', (req, res) => {
@@ -43,7 +70,7 @@ export const setupServer = () => {
     });
   });
 
-  app.use('*', (req, res, next) => {
+  app.use('*', (req, res) => {
     res.status(404).json({
       message: 'Not found',
     });
@@ -60,3 +87,66 @@ export const setupServer = () => {
     console.log(`Server is running on port ${PORT}`);
   });
 };
+
+// import express from 'express';
+// import pino from 'pino-http';
+// import cors from 'cors';
+// import { env } from './utils/env.js';
+// import { getAllContacts, getContactById } from './services/contacts.js';
+
+// const PORT = Number(env('PORT', '3000'));
+
+// export const setupServer = () => {
+//   const app = express();
+
+//   app.use(express.json());
+//   app.use(cors());
+
+//   app.use(
+//     pino({
+//       transport: {
+//         target: 'pino-pretty',
+//       },
+//     }),
+//   );
+
+//   app.get('/contacts', async (req, res) => {
+//     const contacts = await getAllContacts();
+
+//     res.status(200).json({
+//       data: contacts,
+//     });
+//   });
+
+//   app.get('/contacts/:contactId', async (req, res) => {
+//     const { contactId } = req.params;
+//     const contact = await getContactById(contactId);
+
+//     res.status(200).json({
+//       data: contact,
+//     });
+//   });
+
+//   app.get('/', (req, res) => {
+//     res.json({
+//       message: 'Hello world!',
+//     });
+//   });
+
+//   app.use('*', (req, res, next) => {
+//     res.status(404).json({
+//       message: 'Not found',
+//     });
+//   });
+
+//   app.use((err, req, res, next) => {
+//     res.status(500).json({
+//       message: 'Something went wrong',
+//       error: err.message,
+//     });
+//   });
+
+//   app.listen(PORT, () => {
+//     console.log(`Server is running on port ${PORT}`);
+//   });
+// };
