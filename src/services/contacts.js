@@ -7,7 +7,15 @@ export const getAllContacts = async () => {
 };
 
 export const getContactById = async (contactId) => {
-  const contact = await contactsCollection.findById(contactId);
-  console.log('Contact found:', contact);
-  return contact;
+  try {
+    const contact = await ContactsCollection.findById(contactId);
+    if (!contact) {
+      throw new Error('Contact not found');
+    }
+    console.log('Contact found:', contact);
+    return contact;
+  } catch (error) {
+    console.error('Error fetching contact by ID:', error);
+    throw error;
+  }
 };
