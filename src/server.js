@@ -51,13 +51,13 @@ export const setupServer = () => {
         });
       } else {
         res.status(404).json({
-          status: 'error 404',
+          status: '404',
           message: `Contact with id ${contactId} not found`,
         });
       }
     } catch (error) {
       res.status(500).json({
-        status: 'error 500',
+        status: '500',
         message: 'Failed to fetch contact',
         error: error.message,
       });
