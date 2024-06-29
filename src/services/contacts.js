@@ -25,3 +25,11 @@ export const createContact = async (contactData) => {
   console.log('Contact created:', newContact);
   return newContact;
 };
+
+export const deleteContact = async (contactId) => {
+  const contact = await ContactsCollection.findOneAndDelete({
+    _id: contactId,
+  });
+
+  return contact;
+};
