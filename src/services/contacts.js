@@ -33,3 +33,21 @@ export const deleteContact = async (contactId) => {
 
   return contact;
 };
+
+export const updateContact = async (contactId, updateData) => {
+  try {
+    const updatedContact = await ContactsCollection.findByIdAndUpdate(
+      contactId,
+      updateData,
+      { new: true },
+    );
+    if (!updatedContact) {
+      throw new Error('Contact not found');
+    }
+    console.log('Contact updated:', updatedContact);
+    return updatedContact;
+  } catch (error) {
+    console.error('Error updating contact by ID:', error);
+    throw error;
+  }
+};
