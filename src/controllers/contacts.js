@@ -1,5 +1,9 @@
 import createHttpError from 'http-errors';
-import { getAllContacts, getContactById } from '../services/contacts.js';
+import {
+  getAllContacts,
+  getContactById,
+  createContact,
+} from '../services/contacts.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
@@ -38,4 +42,18 @@ export const getContactByIdController = async (req, res, next) => {
     message: `Successfully found contact with id ${contactId}!`,
     data: contact,
   });
+};
+
+export const createContactController = async (req, res, next) => {
+  try {
+    const newContact = await createContact(req.body);
+
+    res.status(201).json({
+      status: 201,
+      message: 'Successfully created a contact!',
+      data: newContact,
+    });
+  } catch (err) {
+    next(err);
+  }
 };

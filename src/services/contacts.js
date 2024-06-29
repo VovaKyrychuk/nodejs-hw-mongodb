@@ -19,3 +19,9 @@ export const getContactById = async (contactId) => {
     throw error;
   }
 };
+
+export const createContact = async (contactData) => {
+  const newContact = await ContactsCollection.create(contactData);
+  console.log('Contact created:', newContact);
+  return newContact;
+};
