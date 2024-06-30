@@ -6,28 +6,48 @@ import {
   deleteContact,
   updateContact,
 } from '../services/contacts.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
-    const contacts = await getAllContacts();
+    const { page, perPage } = parsePaginationParams(req.query);
+    const { data, totalItems } = await getAllContacts(page, perPage);
 
     res.json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts,
+      data: {
+        data,
+        page,
+        perPage,
+        totalItems,
+        totalPages: Math.ceil(totalItems / perPage),
+        hasPreviousPage: page > 1,
+        hasNextPage: page < Math.ceil(totalItems / perPage),
+      },
     });
   } catch (err) {
     next(err);
   }
 };
 
+// export const getContactsController = async (req, res, next) => {
+//   try {
+//     const contacts = await getAllContacts();
+
+//     res.json({
+//       status: 200,
+//       message: 'Successfully found contacts!',
+//       data: contacts,
+//     });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 export const getContactByIdController = async (req, res, next) => {
   const { contactId } = req.params;
-  //   const contact = await getContactById(contactId);
-  //   if (!contact) {
-  //     next(createHttpError(404, 'Contact not found'));
-  //     return;
-  //   }
+
   const contact = await getContactById(contactId).catch((error) => {
     if (error.name === 'CastError') {
       next(createHttpError(404, 'Contact not found'));

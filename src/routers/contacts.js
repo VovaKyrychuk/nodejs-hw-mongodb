@@ -12,7 +12,7 @@ import {
   contactCreateSchema,
   contactUpdateSchema,
 } from '../validation/contacts.js';
-
+import { validateId } from '../middlewares/validateId.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
 const router = Router();
@@ -24,11 +24,12 @@ router.post(
   validateBody(contactCreateSchema),
   ctrlWrapper(createContactController),
 );
+router.delete('/contacts/:contactId', ctrlWrapper(deleteContactController));
 router.patch(
   '/contacts/:contactId',
+  validateId,
   validateBody(contactUpdateSchema),
   ctrlWrapper(updateContactController),
 );
-router.delete('/contacts/:contactId', ctrlWrapper(deleteContactController));
 
 export default router;
