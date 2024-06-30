@@ -29,7 +29,7 @@ export const getAllContacts = async ({
     query.where('isFavourite').equals(filter.isFavourite);
   }
   const [contactsCount, contacts] = await Promise.all([
-    ContactsCollection.find().merge(studentsQuery).countDocuments(),
+    ContactsCollection.find().merge(contactsQuery).countDocuments(),
     contactsQuery
       .skip(skip)
       .limit(limit)
