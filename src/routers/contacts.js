@@ -9,8 +9,8 @@ import {
 } from '../controllers/contacts.js';
 import { validateBody } from '../middlewares/validateBody.js';
 import {
-  contactCreateSchema,
-  contactUpdateSchema,
+  createContactSchema,
+  updateContactSchema,
 } from '../validation/contacts.js';
 import { validateId } from '../middlewares/validateId.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
@@ -21,14 +21,14 @@ router.get('/contacts', ctrlWrapper(getContactsController));
 router.get('/contacts/:contactId', ctrlWrapper(getContactByIdController));
 router.post(
   '/contacts',
-  validateBody(contactCreateSchema),
+  validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
 router.delete('/contacts/:contactId', ctrlWrapper(deleteContactController));
 router.patch(
   '/contacts/:contactId',
   validateId,
-  validateBody(contactUpdateSchema),
+  validateBody(updateContactSchema),
   ctrlWrapper(updateContactController),
 );
 
