@@ -14,7 +14,7 @@ export const getAllContacts = async ({
   page = 1,
   perPage = 10,
   sortOrder = SORT_ORDER.ASC,
-  sortBy = 'name',
+  sortBy = '_id',
   filter = {},
 }) => {
   const limit = perPage;
@@ -33,7 +33,7 @@ export const getAllContacts = async ({
     contactsQuery
       .skip(skip)
       .limit(limit)
-      .sort({ [sortBy]: sortOrder })
+      .sort({ [sortBy]: sortOrder === SORT_ORDER.ASC ? 1 : -1 })
       .exec(),
   ]);
 
