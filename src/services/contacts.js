@@ -5,7 +5,7 @@ import { SORT_ORDER } from '../constants/index.js';
 export const getAllContacts = async ({
   page = 1,
   perPage = 10,
-  sortOrder = req.query.sortOrder || SORT_ORDER.ASC,
+  sortOrder = SORT_ORDER.ASC,
   sortBy = 'name',
   filter = {},
 }) => {
@@ -26,7 +26,7 @@ export const getAllContacts = async ({
     contactsQuery
       .skip(skip)
       .limit(limit)
-      .sort({ [sortBy]: sortOrder })
+      .sort({ [sortBy]: sortOrder === 'DESC' ? -1 : 1 })
       .exec(),
   ]);
 
