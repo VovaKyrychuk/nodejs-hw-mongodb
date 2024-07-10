@@ -31,6 +31,11 @@ export const parseSortParams = (query) => {
   const parsedSortOrder = parseSortOrder(sortOrder);
   const parsedSortBy = parseSortBy(sortBy);
 
+  console.log('Parsed Sort Params:', {
+    sortOrder: parsedSortOrder,
+    sortBy: parsedSortBy,
+  });
+
   return {
     sortOrder: parsedSortOrder,
     sortBy: parsedSortBy,

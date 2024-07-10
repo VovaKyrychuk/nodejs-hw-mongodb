@@ -5,10 +5,12 @@ import { SORT_ORDER } from '../constants/index.js';
 export const getAllContacts = async ({
   page = 1,
   perPage = 10,
-  sortBy = 'name',
   sortOrder = SORT_ORDER.ASC,
+  sortBy = 'name',
   filter = {},
 }) => {
+  console.log(`getAllContacts called with params:`);
+  console.log(`Page: ${page}, PerPage: ${perPage}`);
   console.log(`Sorting by ${sortBy} in ${sortOrder} order`);
   const limit = perPage;
   const skip = (page - 1) * perPage;
