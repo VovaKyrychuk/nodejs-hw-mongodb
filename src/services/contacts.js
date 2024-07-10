@@ -2,33 +2,38 @@ import { ContactsCollection } from '../db/models/contact.js';
 import { calculatePaginationData } from '../utils/calculatePaginationData.js';
 import { SORT_ORDER } from '../constants/index.js';
 
-export const getAllContacts = async ({
+export const getAllContacts = async (
   page = 1,
   perPage = 10,
-  sortOrder = SORT_ORDER.ASC,
   sortBy = 'name',
+  sortOrder = SORT_ORDER.ASC,
   filter = {},
-}) => {
-  console.log(`getAllContacts called with params:`);
-  console.log(`Page: ${page}, PerPage: ${perPage}`);
-  console.log(`Sorting by ${sortBy} in ${sortOrder} order`);
+) => {
   const limit = perPage;
   const skip = (page - 1) * perPage;
+  // console.log(`getAllContacts called with params:`);
+  // console.log(`Page: ${page}, PerPage: ${perPage}`);
+  // console.log(`Sorting by ${sortBy} in ${sortOrder} order`);
+  let contactsQuery = ContactsCollection.find()
+    .skip(skip)
+    .limit(limit)
+    .sort({ [sortBy]: sortOrder });
 
-  const contactsQuery = ContactsCollection.find();
+  // const contactsQuery = ContactsCollection.find();
   if (filter.type) {
-    query.where('contactType').equals(filter.type);
+    contactsQuery.where('contactType').equals(filter.type);
   }
 
   if (filter.isFavourite !== undefined) {
-    query.where('isFavourite').equals(filter.isFavourite);
+    contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
+  console.log('Sort Params:', { sortBy, sortOrder });
   const [contactsCount, contacts] = await Promise.all([
     ContactsCollection.find().merge(contactsQuery).countDocuments(),
     contactsQuery
       .skip(skip)
       .limit(limit)
-      .sort({ [sortBy]: sortOrder })
+      .sort({ [sortBy]: sortOrder === SORT_ORDER.ASC ? 1 : -1 })
       .exec(),
   ]);
 
