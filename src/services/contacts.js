@@ -9,7 +9,7 @@ export const getAllContacts = async ({
   sortOrder = SORT_ORDER.ASC,
   filter = {},
 }) => {
-  console.log(`Sorting by ${sortBy} in ${sortOrder} order`);
+  // console.log(`Sorting by ${sortBy} in ${sortOrder} order`);
   const limit = perPage;
   const skip = (page - 1) * perPage;
 
