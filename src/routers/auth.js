@@ -13,7 +13,7 @@ const router = Router();
 router.post(
   '/register',
   validateBody(registerUserSchema),
-  ctrlWrapper(registerUserController),
+  registerUserController,
 );
 
 router.post(
