@@ -14,10 +14,14 @@ import {
 } from '../validation/contacts.js';
 import { validateId } from '../middlewares/validateId.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const router = Router();
 
-router.get('/', ctrlWrapper(getContactsController));
+router.use(authenticate);
+
+router.use('/:contactId', validateId('contactId'));
+router.get('/', ctrlWrapper(getAllContactsController));
 router.get('/:contactId', ctrlWrapper(getContactByIdController));
 router.post(
   '',
@@ -25,11 +29,15 @@ router.post(
   ctrlWrapper(createContactController),
 );
 router.delete('/:contactId', ctrlWrapper(deleteContactController));
+router.put(
+  '/:contactId',
+  validateBody(createContactSchema),
+  ctrlWrapper(upsertContactController),
+);
 router.patch(
   '/:contactId',
-  validateId,
   validateBody(updateContactSchema),
-  ctrlWrapper(updateContactController),
+  ctrlWrapper(patchContactController),
 );
 
 export default router;
