@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { Session } from '..db/models/session.js';
+import { Sessions } from '..db/models/session.js';
 import UsersCollection from '..db/models/user.js';
 
 export const authenticate = async (req, res, next) => {
@@ -16,17 +16,17 @@ export const authenticate = async (req, res, next) => {
       return next(createHttpError(401, 'Auth header should be of type Bearer'));
     }
 
-    const session = await Session.findOne({ accessToken: token });
+    const sessions = await Sessions.findOne({ accessToken: token });
 
-    if (!session) {
+    if (!sessions) {
       return next(createHttpError(401, 'Session not found'));
     }
 
-    if (Date.now() > session.accessTokenValidUntil) {
+    if (Date.now() > sessions.accessTokenValidUntil) {
       return next(createHttpError(401, 'Session token is expired!'));
     }
 
-    const user = await UsersCollection.findById(session.userId);
+    const user = await UsersCollection.findById(sessions.userId);
 
     if (!user) {
       return next(createHttpError(401));
