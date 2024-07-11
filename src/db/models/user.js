@@ -13,7 +13,7 @@ const usersSchema = new Schema(
         validator: function (v) {
           return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
         },
-        message: (props) => `${props.value} не є коректним email!`,
+        message: (props) => `${props.value} not correct email!`,
       },
     },
     password: {
