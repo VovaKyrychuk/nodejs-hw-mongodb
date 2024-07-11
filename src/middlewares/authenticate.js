@@ -1,41 +1,46 @@
 import createHttpError from 'http-errors';
-import Session from '..db/models/session.js';
-import UsersCollection from '..db/models/user.js';
+
+import { SessionsCollection } from '../db/models/session.js';
+import { UsersCollection } from '../db/models/user.js';
 
 export const authenticate = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
+  const authHeader = req.get('Authorization');
 
-    if (!authHeader) {
-      return next(createHttpError(401, 'Please provide Authorization header'));
-    }
-
-    const [bearer, token] = authHeader.split(' ');
-
-    if (bearer !== 'Bearer' || !token) {
-      return next(createHttpError(401, 'Auth header should be of type Bearer'));
-    }
-
-    const session = await Session.findOne({ accessToken: token });
-
-    if (!session) {
-      return next(createHttpError(401, 'Session not found'));
-    }
-
-    if (Date.now() > session.accessTokenValidUntil) {
-      return next(createHttpError(401, 'Session token is expired!'));
-    }
-
-    const user = await UsersCollection.findById(session.userId);
-
-    if (!user) {
-      return next(createHttpError(401));
-    }
-
-    req.user = user;
-
-    next();
-  } catch (error) {
-    next(error);
+  if (!authHeader) {
+    next(createHttpError(401, 'Please provide Authorization header'));
+    return;
   }
+
+  const bearer = authHeader.split(' ')[0];
+  const token = authHeader.split(' ')[1];
+
+  if (bearer !== 'Bearer' || !token) {
+    next(createHttpError(401, 'Auth header should be of type Bearer'));
+    return;
+  }
+
+  const session = await SessionsCollection.findOne({ accessToken: token });
+
+  if (!session) {
+    next(createHttpError(401, 'Session not found'));
+    return;
+  }
+
+  const isAccessTokenExpired =
+    new Date() > new Date(session.accessTokenValidUntil);
+
+  if (isAccessTokenExpired) {
+    next(createHttpError(401, 'Access token expired'));
+  }
+
+  const user = await UsersCollection.findById(session.userId);
+
+  if (!user) {
+    next(createHttpError(401));
+    return;
+  }
+
+  req.user = user;
+
+  next();
 };
