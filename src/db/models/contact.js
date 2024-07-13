@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { model, Schema } from 'mongoose';
 
 const contactSchema = new Schema(
