@@ -29,11 +29,7 @@ router.post(
   ctrlWrapper(createContactController),
 );
 router.delete('/:contactId', ctrlWrapper(deleteContactController));
-// router.put(
-//   '/:contactId',
-//   validateBody(createContactSchema),
-//   ctrlWrapper(upsertContactController),
-// );
+
 router.patch(
   '/:contactId',
   validateBody(updateContactSchema),
