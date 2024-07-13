@@ -12,7 +12,7 @@
 import { isValidObjectId } from 'mongoose';
 import createHttpError from 'http-errors';
 
-const validateId =
+export const validateId =
   (idName = 'id') =>
   (req, res, next) => {
     try {
@@ -30,5 +30,3 @@ const validateId =
       return next(createHttpError(500, error.message));
     }
   };
-
-export default validateId;
